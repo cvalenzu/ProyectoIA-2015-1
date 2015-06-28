@@ -1,3 +1,6 @@
+#ifndef OPERATORS_HEADER
+#define OPERATORS_HEADER
+
 //Mutate solution, adding a new tour to a bus or changing a assigned tour to 
 //a random one.
 // ------Variables ------
@@ -39,4 +42,6 @@ solution worsist(solution* population, int pop_size);
 // return:
 //	Index of selected solution
 int select_solution(solution* population, int pop_size);
+
+#endif
 

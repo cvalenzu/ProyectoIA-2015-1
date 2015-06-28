@@ -33,6 +33,7 @@ solution worsist(solution* population, int pop_size){
 
 
 //Select a solution to use mutation or crossover
+//using roulette
 int select_solution(solution* population, int pop_size){
 	int i;
 	double offset = 0.0;

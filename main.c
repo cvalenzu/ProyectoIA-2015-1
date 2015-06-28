@@ -17,11 +17,11 @@ int main(int argc, char* argv[]){
 	int generations;
 	int i, index, index2;
 
-	double mutation_prob = 0.9;
-	double cross_prob = 0.7;
-	double r;
-	
-	int j;
+	double mutation_prob = 0.5;
+	double cross_prob = 0.3;
+	double MAX_CROSS_PROB = 0.7;
+		
+	int j,bus, solut;
 
 	if(argc < 4){
 		return -1;
@@ -58,11 +58,9 @@ int main(int argc, char* argv[]){
 
 
 		while(new_pop_size < pop_size){
-			r = rand_double();
-/*			if(cross_prob > r){
+			if(cross_prob > rand_double()){
 				index = select_solution(population, pop_size);
 				index2 = select_solution(population, pop_size);
-
 				tmp_solution = crossover_solutions(population[index], population[index2],instance);
 				deep_copy_solution(&(tmp_solution[0]), &(new_population[new_pop_size]), instance);
 				new_pop_size +=1;
@@ -70,15 +68,16 @@ int main(int argc, char* argv[]){
 					deep_copy_solution(&(tmp_solution[1]), &(new_population[new_pop_size]), instance);
 					new_pop_size +=1;
 				}
-
 			}
 			else{
-*/				index = select_solution(population, pop_size);
+				index = select_solution(population, pop_size);
 				tmp = mutate_solution(population[index],instance,mutation_prob);
 				deep_copy_solution(&tmp, &(new_population[new_pop_size]), instance);
 				new_pop_size += 1;
-//			}
+			}
 		}
+
+		if(cross_prob < MAX_CROSS_PROB) cross_prob += 0.05;
 
 		tmp_solution = population;
 		population = new_population;
@@ -88,33 +87,48 @@ int main(int argc, char* argv[]){
 		update_evac_time(&population, instance,pop_size);
 
 		new_pop_size = 0;
-		for(j = 0; j < pop_size; j++){
-			printf("Solucion: %d, Fitness: %f, Evac time:%d\n",j+1,population[j].fitness,population[j].evac_time);
+
+
+		//////// DELETE
+		
+			for(j = 0; j < pop_size; j++){
+				printf("Solucion: %d, Fitness: %f, Evac time:%d\n",j+1,population[j].fitness,population[j].evac_time);
+			}
+		for(solut = 0 ; solut < 1; solut ++){
+			printf("Solucion: %d\n", solut);
+			printf("People Remaining:\n");
+			for(j = 0; j < instance.points; j++){
+				printf("%d ", population[solut].people_remaining[j]);
+			}
+			printf("\nCapacity Remaining:\n");
+			for(j = 0; j < instance.shelters; j++){
+				printf("%d ", population[solut].capacity_remaining[j]);
+			}
+			printf("\n");
+
+/*			printf("Bus Routes:\n");
+			for(bus = 0; bus < instance.buses;bus++){
+				printf("Bus: %d \n", bus+1);
+				printf("S%d -> ",population[solut].bus_list[bus].starting_tour.station);
+				printf("P%d",population[solut].bus_list[bus].starting_tour.point);
+				printf(":E%d",population[solut].bus_list[bus].starting_tour.evac);
+				printf(":D%d",population[solut].bus_list[bus].starting_tour.distance);	
+				printf(" -> R%d",population[solut].bus_list[bus].starting_tour.shelter); 
+
+				for(j = 0;j < population[solut].bus_list[bus].route_length; j++){
+					printf("-> R%d ",population[solut].bus_list[bus].route[j].shelter1);
+					printf("-> P%d",population[solut].bus_list[bus].route[j].point);
+					printf(":E%d",population[solut].bus_list[bus].route[j].evac);
+					printf(":D%d ", population[solut].bus_list[bus].route[j].distance);
+					printf("-> R%d ",population[solut].bus_list[bus].route[j].shelter2);
+				}
+				printf("\n");
+
+			}
+*/
 		}
 	}
 
-	printf("People Remaining:\n");
-	for(j = 0; j < instance.points; j++){
-		printf("%d ", population[0].people_remaining[j]);
-	}
-	printf("\nCapacity Remaining:\n");
-	for(j = 0; j < instance.shelters; j++){
-		printf("%d ", population[0].capacity_remaining[j]);
-	}
 
-	printf("\nBus Routes:\n");
-	for(i = 0; i < instance.buses;i++){
-		printf("Bus: %d \n", i+1);
-		for(j = 0;j < population[0].bus_list[i].tour_length; j++){
-			if(j==0){
-				printf("S%d -> P%d -> R%d",population[0].bus_list[i].starting_tour.station,population[0].bus_list[i].starting_tour.point,population[0].bus_list[i].starting_tour.shelter); 
-			}
-			else{
-				printf("-> R%d -> P%d -> R%d",population[0].bus_list[i].route[j].shelter1,population[0].bus_list[i].route[j].point,population[0].bus_list[i].route[j].shelter2);
-			}
-		}
-		printf("\n");
-
-	}
 	return 0;
 }

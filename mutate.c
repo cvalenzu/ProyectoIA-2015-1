@@ -2,130 +2,119 @@
 #include "helpers.h"
 #include "operators.h"
 
+#include <stdio.h>
+
 solution mutate_solution(solution sol,BEPinstance instance, double mutate_prob){
-	int i,j, route_index;
+	int i,j;
 	int evac;
-	int station,point,shelter;
-	int shelter1,shelter2;
-	int d1,d2;
-	initial_tour tmp_initial;
-	tour tmp_tour;
-	tour *tmp_route;
-
-	int sum_fitness;
-	//Iterating over the buses
-	for(i = 0; i < instance.buses;i++){
-
-		//Iterating over the bus tours
-		for(j = 0; j < sol.bus_list[i].tour_length; j++){
-			if(mutate_prob > rand_double()){
-				//Mutate the initial tour
-				if(j==0){
-					station = sol.bus_list[i].starting_tour.station;
-                	point = randint(instance.points);
-                	if(sol.bus_list[i].tour_length == 1){
-                		shelter = randint(instance.shelters);
-                	}
-                	else{
-                		shelter = sol.bus_list[i].route[0].shelter1;
-                	}
-					
-					sol.people_remaining[sol.bus_list[i].starting_tour.point] += sol.bus_list[i].starting_tour.evac;
-                    sol.capacity_remaining[sol.bus_list[i].starting_tour.shelter] += sol.bus_list[i].starting_tour.evac;
-
-					evac = get_evac(point,shelter,sol,instance);
-
-					tmp_initial.station = station;
-                	tmp_initial.point = point;
-                	tmp_initial.shelter = shelter;
-
-                	d1 = instance.distance_station_matrix[get_index(point,station,instance.points)];
-                	d2 = instance.distance_shelter_matrix[get_index(shelter,point,instance.shelters)];
-
-                	tmp_initial.distance = d1 + d2;
-					tmp_initial.evac = evac;
-
-					sol.bus_list[i].starting_tour = tmp_initial;
-					sol.people_remaining[point] -= evac;
-					sol.capacity_remaining[shelter] -= evac;
-
-								
-				}
-				//Mutate a tour after the first one
-				else{
-
-					route_index = j-1;
-					//Looking for the last shelter
-					if(route_index == 0){
-						shelter1 = sol.bus_list[i].starting_tour.shelter;
-					}
-					else{
-						shelter1 = sol.bus_list[i].route[route_index-1].shelter2;
-					}
-					if(route_index == sol.bus_list[i].tour_length - 1){
-						shelter2 = randint(instance.shelters);
-					}
-					else{
-						shelter2 = sol.bus_list[i].route[route_index+1].shelter1;
-					}
-
-					point = randint(instance.points);
-					
-					
-					sol.people_remaining[sol.bus_list[i].route[route_index].point] += sol.bus_list[i].route[route_index].evac;
-                    sol.capacity_remaining[sol.bus_list[i].route[route_index].shelter2] += sol.bus_list[i].route[route_index].evac;
-
-                	evac = get_evac(point,shelter2,sol,instance);
-
-					tmp_tour.shelter1 = shelter1;
-					tmp_tour.shelter2 = shelter2;
-					tmp_tour.point = point;
-
-					d1 = instance.distance_shelter_matrix[get_index(shelter1,point,instance.shelters)];
-                    d2 = instance.distance_shelter_matrix[get_index(shelter2,point,instance.shelters)];
-
-					tmp_tour.distance = d1 + d2;
-					tmp_tour.evac = evac;
-					
-					sol.bus_list[i].route[route_index] = tmp_tour;
-					sol.people_remaining[point] -= evac;
-					sol.capacity_remaining[shelter2] -= evac;
-				}
-			}
-		}
-		if((mutate_prob > rand_double()) && (sol.bus_list[i].tour_length < MAX_TOURS)){
-			route_index = j-1;
-			//Add new tour
-            if(route_index == 0){
-                 shelter1 = sol.bus_list[i].starting_tour.shelter;
-             }
-            else{
-                 shelter1 = sol.bus_list[i].route[route_index-1].shelter2;
-             }
-
-			point = randint(instance.points);
-            shelter2 = randint(instance.shelters);
-			evac = get_evac(point,shelter2,sol,instance);
 	
-			tmp_tour.shelter1 = shelter1;
-			tmp_tour.shelter2 = shelter2;
-			tmp_tour.point = point;
-			
-            d1 = instance.distance_shelter_matrix[get_index(shelter1,point,instance.shelters)];
-            d2 = instance.distance_shelter_matrix[get_index(shelter2,point,instance.shelters)];
+	int point,station,shelter;
+	int shelter1,shelter2;
+	
+	int d1,d2;
 
-			tmp_tour.distance = d1+d2;
-			tmp_tour.evac = evac;
-			
-			sol.bus_list[i].route[sol.bus_list[i].tour_length-1] = tmp_tour;
-			sol.bus_list[i].tour_length += 1;
+	int last_shelter_visited;
+
+	double size_ratio;
+	//Iterating over buses
+	for(i = 0; i < instance.buses; i++){
+		//Mutate first solution
+		if(mutate_prob > rand_double()){
+			//Restoring evacuated people in initial tour
+			sol.people_remaining[sol.bus_list[i].starting_tour.point] += sol.bus_list[i].starting_tour.evac;
+            sol.capacity_remaining[sol.bus_list[i].starting_tour.shelter] += sol.bus_list[i].starting_tour.evac;
+
+            //Calculating new point and shelter
+			station = sol.bus_list[i].starting_tour.station;
+			point = randint(instance.points);
+			shelter = randint(instance.shelters);
+
+			//Calculating new distances
+			d1 = instance.distance_station_matrix[get_index(station,point,instance.shelters)];
+			d2 = instance.distance_shelter_matrix[get_index(shelter,point,instance.shelters)];
+
+			//Getting amount of people evacuated
+			evac = get_evac(point,shelter,sol,instance);
+
+			//Mutating solution
+			sol.bus_list[i].starting_tour.point = point;
+			sol.bus_list[i].starting_tour.shelter = shelter;
+			sol.bus_list[i].starting_tour.evac = evac;
+			sol.bus_list[i].starting_tour.distance = d1+d2;
+			sol.people_remaining[point] -= evac;
+			sol.capacity_remaining[shelter] -= evac;
+		}
+
+		last_shelter_visited = sol.bus_list[i].starting_tour.shelter; 
+		for(j = 0; j < sol.bus_list[i].route_length ; j++){
+			//Fixing bus flow errors
+			if(last_shelter_visited != sol.bus_list[i].route[j].shelter1){
+				d1 = instance.distance_shelter_matrix[get_index(sol.bus_list[i].route[j].shelter1,point,instance.shelters)];
+				sol.bus_list[i].route[j].distance -= d1;
+
+				d2 = instance.distance_shelter_matrix[get_index(last_shelter_visited,point,instance.shelters)];
+				sol.bus_list[i].route[j].distance += d2;
+
+				sol.bus_list[i].route[j].shelter1 = last_shelter_visited;
+			}
+
+			if(mutate_prob > rand_double()){
+				//Restoring evacuated people in initial tour
+				sol.people_remaining[sol.bus_list[i].route[j].point] += sol.bus_list[i].route[j].evac;
+	            sol.capacity_remaining[sol.bus_list[i].route[j].shelter2] += sol.bus_list[i].route[j].evac;
+
+	            //Calculating new point and shelter
+				shelter1 = last_shelter_visited;
+				point = randint(instance.points);
+				shelter2 = randint(instance.shelters);
+
+				//Calculating new distances
+				d1 = instance.distance_shelter_matrix[get_index(shelter1,point,instance.shelters)];
+				d2 = instance.distance_shelter_matrix[get_index(shelter2,point,instance.shelters)];
+
+				//Getting amount of people evacuated
+				evac = get_evac(point,shelter2,sol,instance);
+
+				//Mutating solution
+
+				sol.bus_list[i].route[j].point = point;
+				sol.bus_list[i].route[j].shelter2 = shelter2;
+				sol.bus_list[i].route[j].evac = evac;
+				sol.bus_list[i].route[j].distance = d1+d2;
+				sol.people_remaining[point] -= evac;
+				sol.capacity_remaining[shelter2] -= evac;				
+			}
+
+			last_shelter_visited = sol.bus_list[i].route[j].shelter2;
+		}
+
+		size_ratio = (double)(MAX_TOURS - sol.bus_list[i].route_length) / (double) MAX_TOURS;
+		if((mutate_prob * size_ratio  > rand_double()) && (sol.bus_list[i].route_length < MAX_TOURS)){
+			shelter1 = last_shelter_visited;
+			point = randint(instance.points);
+			shelter2 = randint(instance.shelters);
+
+			evac = get_evac(point,shelter2,sol,instance);
+
+			d1 = instance.distance_shelter_matrix[get_index(shelter1,point,instance.shelters)];
+			d2 = instance.distance_shelter_matrix[get_index(shelter2,point,instance.shelters)];
+
+			sol.bus_list[i].route[sol.bus_list[i].route_length].shelter1 = shelter1;
+			sol.bus_list[i].route[sol.bus_list[i].route_length].shelter2 = shelter2;
+			sol.bus_list[i].route[sol.bus_list[i].route_length].point = point;
+
+			sol.bus_list[i].route[sol.bus_list[i].route_length].evac = evac;
+			sol.bus_list[i].route[sol.bus_list[i].route_length].distance = d1 + d2;
+
+			sol.bus_list[i].route_length += 1;
 			sol.people_remaining[point] -= evac;
             sol.capacity_remaining[shelter2] -= evac;
-            
 		}
-		
+
+
 
 	}
+
 	sol.fitness = calculate_fitness(sol,instance);
 	return sol;
 }

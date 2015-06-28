@@ -4,6 +4,12 @@
 #include "helpers.h"
 #include "operators.h"
 
+solution* crossover_solutions(solution sol1, solution sol2, BEPinstance instance){
+	//Add random and one_point_cross when finished
+	return bus_tour_swapping(sol1, sol2, instance);
+}
+
+/*
 solution* one_point_crossover(solution sol1, solution sol2, BEPinstance instance){
 	solution *sols;
 	int max_cutpoint;
@@ -118,24 +124,44 @@ solution* one_point_crossover(solution sol1, solution sol2, BEPinstance instance
 
 	return sols;
 }
-
+*/
 solution* bus_tour_swapping(solution sol1, solution sol2, BEPinstance instance){
 	solution *sols;
+	
 	int bus;
 	int i;
-
-	int evac;
-	int shelter1;
-	int shelter2;
-	int point;
-	int d1,d2;
+	int index;
 
 	sols = (solution*) malloc(sizeof(solution)*2);
 
 	deep_copy_solution(&(sol1), &(sols[0]),instance);
 	deep_copy_solution(&(sol2), &(sols[1]),instance);
 
-	//SWAP BUS and RESTORE PEOPLE_REAMAINING AND CAPACITY_REMAINING
+	bus = randint(instance.buses);
+
+	for(index = 0; index < 2; index++){
+		sols[index].people_remaining[sols[index].bus_list[bus].starting_tour.point] += sols[index].bus_list[bus].starting_tour.evac; 
+		sols[index].capacity_remaining[sols[index].bus_list[bus].starting_tour.shelter] += sols[index].bus_list[bus].starting_tour.evac; 
+
+		for(i= 0; i < sols[index].bus_list[bus].route_length;i++){
+			sols[index].people_remaining[sols[index].bus_list[bus].route[i].point] += sols[index].bus_list[bus].route[i].evac; 
+			sols[index].capacity_remaining[sols[index].bus_list[bus].route[i].shelter2] += sols[index].bus_list[bus].route[i].evac; 
+		}
+	}
+
+	sols[0].bus_list[bus] = sol2.bus_list[bus];
+	sols[1].bus_list[bus] = sol1.bus_list[bus];
+
+	for(index = 0; index < 2; index++){
+		sols[index].people_remaining[sols[index].bus_list[bus].starting_tour.point] -= sols[index].bus_list[bus].starting_tour.evac; 
+		sols[index].capacity_remaining[sols[index].bus_list[bus].starting_tour.shelter] -= sols[index].bus_list[bus].starting_tour.evac; 
+
+		for(i= 0; i < sol1.bus_list[bus].route_length;i++){
+			sols[index].people_remaining[sols[index].bus_list[bus].route[i].point] -= sols[index].bus_list[bus].route[i].evac; 
+			sols[index].capacity_remaining[sols[index].bus_list[bus].route[i].shelter2] -= sols[index].bus_list[bus].route[i].evac; 
+		}
+	}
+
 
 	return sols;
 

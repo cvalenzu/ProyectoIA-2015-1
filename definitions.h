@@ -5,8 +5,8 @@
 
 
 //Constants used for fitness function
-#define PEOPLE_VIOLATION 100
-#define CAPACITY_VIOLATION 50
+#define PEOPLE_VIOLATION 1000
+#define CAPACITY_VIOLATION 500
 
 #define MAX_TOURS 20
 
@@ -57,7 +57,7 @@ typedef struct{
 typedef struct{
 	initial_tour starting_tour;
 	tour route[MAX_TOURS];
-	int tour_length;
+	int route_length;
 } bus_tour;
 
 
