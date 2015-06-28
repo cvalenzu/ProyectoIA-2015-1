@@ -4,7 +4,7 @@
 #include "helpers.h"
 #include "operators.h"
 
-solution* crossover_solutions(solution sol1, solution sol2, BEPinstance instance){
+solution* one_point_crossover(solution sol1, solution sol2, BEPinstance instance){
 	solution *sols;
 	int max_cutpoint;
 	int max_tour;
@@ -117,4 +117,27 @@ solution* crossover_solutions(solution sol1, solution sol2, BEPinstance instance
 	sols[1].fitness = calculate_fitness(sols[1], instance);
 
 	return sols;
+}
+
+solution* bus_tour_swapping(solution sol1, solution sol2, BEPinstance instance){
+	solution *sols;
+	int bus;
+	int i;
+
+	int evac;
+	int shelter1;
+	int shelter2;
+	int point;
+	int d1,d2;
+
+	sols = (solution*) malloc(sizeof(solution)*2);
+
+	deep_copy_solution(&(sol1), &(sols[0]),instance);
+	deep_copy_solution(&(sol2), &(sols[1]),instance);
+
+	//SWAP BUS and RESTORE PEOPLE_REAMAINING AND CAPACITY_REMAINING
+
+	return sols;
+
+
 }

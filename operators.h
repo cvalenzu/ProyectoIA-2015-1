@@ -7,7 +7,10 @@
 solution mutate_solution(solution sol,BEPinstance instance,double mutate_prob);
 
 
-//Crossover two solutions
+
+solution* crossover_solutions(solution sol1, solution sol2, BEPinstance instance);
+
+//One point crossover
 //Select one point for every bus, creating 
 //a random crossover between the solutions
 //------ Variables---
@@ -16,7 +19,9 @@ solution mutate_solution(solution sol,BEPinstance instance,double mutate_prob);
 // instance: data of the problem
 // return:
 // 		list with two new solutions
-solution* crossover_solutions(solution sol1, solution sol2, BEPinstance instance);
+solution* one_point_crossover(solution sol1, solution sol2, BEPinstance instance);
+
+solution* bus_tour_swapping(solution sol1, solution sol2, BEPinstance instance);
 
 //Select the best solution
 // -----Variables -------
