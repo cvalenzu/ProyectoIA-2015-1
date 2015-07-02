@@ -17,21 +17,6 @@ solution elitist(solution* population, int pop_size){
 	return sol;
 }
 
-//Select the fattiest solution
-solution worsist(solution* population, int pop_size){
-	int i;
-	double min_fitness = 1000000000000000;
-	solution sol;
-	for(i = 0; i < pop_size; i++){
-		if(population[i].fitness < min_fitness){
-			min_fitness = population[i].fitness;
-			sol = population[i];
-		}
-	}
-	return sol;
-}
-
-
 //Select a solution to use mutation or crossover
 //using roulette
 int select_solution(solution* population, int pop_size){

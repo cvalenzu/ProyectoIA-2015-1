@@ -37,7 +37,6 @@ typedef struct{
 	int station;
 	int point;
 	int shelter;
-	int distance;
 	int evac; //people evacuated in this tour.
 } initial_tour;
 
@@ -45,10 +44,8 @@ typedef struct{
 //Generic tour after the initial one
 //begins in one shelter and ends in the same or other.
 typedef struct{
-	int shelter1;
 	int point;
-	int shelter2;
-	int distance;
+	int shelter;
 	int evac;
 } tour;
 

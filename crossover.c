@@ -12,6 +12,8 @@ solution* crossover_solutions(solution sol1, solution sol2, BEPinstance instance
 
 }
 
+
+/*
 solution* one_point_crossover(solution sol1, solution sol2, BEPinstance instance){
 	solution *sols;
 	int max_cutpoint;
@@ -85,14 +87,14 @@ solution* one_point_crossover(solution sol1, solution sol2, BEPinstance instance
 
 	}
 
-	/*sols[0].fitness = calculate_fitness(sols[0], instance);
+	sols[0].fitness = calculate_fitness(sols[0], instance);
 	sols[1].fitness = calculate_fitness(sols[1], instance);
 	sols[0].evac_time = calculate_evac_time(sols[0],instance);
 	sols[1].evac_time = calculate_evac_time(sols[1],instance);
-*/
+
 
 	return sols;
-}
+}*/
 
 solution* bus_tour_swapping(solution sol1, solution sol2, BEPinstance instance){
 	solution *sols;
@@ -114,7 +116,7 @@ solution* bus_tour_swapping(solution sol1, solution sol2, BEPinstance instance){
 
 		for(i= 0; i < sols[index].bus_list[bus].route_length;i++){
 			sols[index].people_remaining[sols[index].bus_list[bus].route[i].point] += sols[index].bus_list[bus].route[i].evac; 
-			sols[index].capacity_remaining[sols[index].bus_list[bus].route[i].shelter2] += sols[index].bus_list[bus].route[i].evac; 
+			sols[index].capacity_remaining[sols[index].bus_list[bus].route[i].shelter] += sols[index].bus_list[bus].route[i].evac; 
 		}
 	}
 
@@ -127,7 +129,7 @@ solution* bus_tour_swapping(solution sol1, solution sol2, BEPinstance instance){
 
 		for(i= 0; i < sol1.bus_list[bus].route_length;i++){
 			sols[index].people_remaining[sols[index].bus_list[bus].route[i].point] -= sols[index].bus_list[bus].route[i].evac; 
-			sols[index].capacity_remaining[sols[index].bus_list[bus].route[i].shelter2] -= sols[index].bus_list[bus].route[i].evac; 
+			sols[index].capacity_remaining[sols[index].bus_list[bus].route[i].shelter] -= sols[index].bus_list[bus].route[i].evac; 
 		}
 	}
 

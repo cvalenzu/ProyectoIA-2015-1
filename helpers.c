@@ -22,14 +22,16 @@ double rand_double(){
 //Get max people that can be evacuated from point to shelter
 int get_evac(int point, int shelter,  solution sol, BEPinstance instance){
 	int evac = 0;
-    while(1){
+/*    while(1){
     	evac = randint(instance.bus_capacity);
     	if(evac != 0) break;
 	}
-	if(evac > sol.people_remaining[point]){
+*/
+
+/*DELETE	if(evac > sol.people_remaining[point]){
 		evac = sol.people_remaining[point];
 	} 
-	/*	
+*/	
     if(sol.people_remaining[point] > instance.bus_capacity){
 		evac = instance.bus_capacity;
 	}
@@ -39,7 +41,7 @@ int get_evac(int point, int shelter,  solution sol, BEPinstance instance){
     if(evac > sol.capacity_remaining[shelter]){
         evac = sol.capacity_remaining[shelter];
     }
-    */	
+    	
 	return evac;
 }
 
@@ -51,14 +53,21 @@ int calculate_evac_time(solution sol, BEPinstance instance){
 	int people_left = 0;
 	int shelter_capacity= 0;
 
+
+	int last_shelter;
 	int max_distance = 0;
 	int i,j;
 
 	for(i=0; i < instance.buses; i++){
 		//Calculating the distance to every bus
-		distance += sol.bus_list[i].starting_tour.distance;
+
+		last_shelter =  sol.bus_list[i].starting_tour.shelter;
+		distance += instance.distance_station_matrix[get_index(sol.bus_list[i].starting_tour.point, sol.bus_list[i].starting_tour.station, instance.points)];
+		distance += instance.distance_shelter_matrix[get_index(sol.bus_list[i].starting_tour.shelter, sol.bus_list[i].starting_tour.point, instance.shelters)];
+
 		for(j = 0; j < sol.bus_list[i].route_length ; j++){
-			distance += sol.bus_list[i].route[j].distance;
+			distance += instance.distance_shelter_matrix[get_index(last_shelter, sol.bus_list[i].route[j].point, instance.shelters)];
+			distance += instance.distance_shelter_matrix[get_index(sol.bus_list[i].route[j].shelter, sol.bus_list[i].route[j].point, instance.shelters)];
 		}
 		distances[i] = distance;
 		distance = 0;
@@ -146,12 +155,6 @@ void initialize_population(BEPinstance instance, solution** population, int pop_
 				tmp_tour.point = point;
 				tmp_tour.shelter = shelter;
 				
-				//Calculating distances
-				distance_to_point = instance.distance_station_matrix[get_index(point,station,instance.points)];
-				distance_to_shelter = instance.distance_shelter_matrix[get_index(shelter,point,instance.shelters)];
-
-				tmp_tour.distance = distance_to_point + distance_to_shelter;
-
 				//Calculating evacuation people
 				evac = get_evac(point,shelter, (*population)[i], instance);
 				tmp_tour.evac = evac;

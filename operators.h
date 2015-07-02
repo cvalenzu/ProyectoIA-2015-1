@@ -31,11 +31,6 @@ solution* bus_tour_swapping(solution sol1, solution sol2, BEPinstance instance);
 // populations: list of solutions
 solution elitist(solution* population, int pop_size);
 
-//Select the worst solution
-// -----Variables -------
-// populations: list of solutions
-solution worsist(solution* population, int pop_size);
-
 //Select using roulette
 //------Variables ------
 // population: list of solutions
