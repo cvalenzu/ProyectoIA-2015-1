@@ -15,7 +15,6 @@ solution mutate_solution(solution sol,BEPinstance instance, double mutate_prob){
 
 	int last_shelter_visited;
 
-	double size_ratio;
 	//Iterating over buses
 	for(i = 0; i < instance.buses; i++){
 		//Mutate first solution
@@ -88,8 +87,7 @@ solution mutate_solution(solution sol,BEPinstance instance, double mutate_prob){
 			last_shelter_visited = sol.bus_list[i].route[j].shelter2;
 		}
 
-		size_ratio = (double)(MAX_TOURS - sol.bus_list[i].route_length) / (double) MAX_TOURS;
-		if((mutate_prob * size_ratio  > rand_double()) && (sol.bus_list[i].route_length < MAX_TOURS)){
+		if((mutate_prob  > rand_double()) && (sol.bus_list[i].route_length < MAX_TOURS)){
 			shelter1 = last_shelter_visited;
 			point = randint(instance.points);
 			shelter2 = randint(instance.shelters);

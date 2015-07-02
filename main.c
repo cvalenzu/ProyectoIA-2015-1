@@ -19,7 +19,7 @@ int main(int argc, char* argv[]){
 
 	double mutation_prob = 0.5;
 	double cross_prob = 0.3;
-	double MAX_CROSS_PROB = 0.7;
+	//double MAX_CROSS_PROB = 0.7;
 		
 	int j,bus, solut;
 
@@ -77,7 +77,7 @@ int main(int argc, char* argv[]){
 			}
 		}
 
-		if(cross_prob < MAX_CROSS_PROB) cross_prob += 0.05;
+		//if(cross_prob < MAX_CROSS_PROB) cross_prob += 0.05;
 
 		tmp_solution = population;
 		population = new_population;
@@ -91,9 +91,9 @@ int main(int argc, char* argv[]){
 
 		//////// DELETE
 		
-			for(j = 0; j < pop_size; j++){
+		for(j = 0; j < pop_size; j++){
 				printf("Solucion: %d, Fitness: %f, Evac time:%d\n",j+1,population[j].fitness,population[j].evac_time);
-			}
+		}
 		for(solut = 0 ; solut < 1; solut ++){
 			printf("Solucion: %d\n", solut);
 			printf("People Remaining:\n");
@@ -106,27 +106,28 @@ int main(int argc, char* argv[]){
 			}
 			printf("\n");
 
-/*			printf("Bus Routes:\n");
-			for(bus = 0; bus < instance.buses;bus++){
-				printf("Bus: %d \n", bus+1);
-				printf("S%d -> ",population[solut].bus_list[bus].starting_tour.station);
-				printf("P%d",population[solut].bus_list[bus].starting_tour.point);
-				printf(":E%d",population[solut].bus_list[bus].starting_tour.evac);
-				printf(":D%d",population[solut].bus_list[bus].starting_tour.distance);	
-				printf(" -> R%d",population[solut].bus_list[bus].starting_tour.shelter); 
-
-				for(j = 0;j < population[solut].bus_list[bus].route_length; j++){
-					printf("-> R%d ",population[solut].bus_list[bus].route[j].shelter1);
-					printf("-> P%d",population[solut].bus_list[bus].route[j].point);
-					printf(":E%d",population[solut].bus_list[bus].route[j].evac);
-					printf(":D%d ", population[solut].bus_list[bus].route[j].distance);
-					printf("-> R%d ",population[solut].bus_list[bus].route[j].shelter2);
-				}
-				printf("\n");
-
-			}
-*/
 		}
+	}
+
+	solut = 0;
+	printf("Bus Routes:\n");
+	for(bus = 0; bus < instance.buses;bus++){
+		printf("Bus: %d \n", bus+1);
+		printf("S%d -> ",population[solut].bus_list[bus].starting_tour.station);
+		printf("P%d",population[solut].bus_list[bus].starting_tour.point);
+		printf(":E%d",population[solut].bus_list[bus].starting_tour.evac);
+		printf(":D%d",population[solut].bus_list[bus].starting_tour.distance);	
+		printf(" -> R%d",population[solut].bus_list[bus].starting_tour.shelter); 
+
+		for(j = 0;j < population[solut].bus_list[bus].route_length; j++){
+			printf("-> R%d ",population[solut].bus_list[bus].route[j].shelter1);
+			printf("-> P%d",population[solut].bus_list[bus].route[j].point);
+			printf(":E%d",population[solut].bus_list[bus].route[j].evac);
+			printf(":D%d ", population[solut].bus_list[bus].route[j].distance);
+			printf("-> R%d ",population[solut].bus_list[bus].route[j].shelter2);
+		}
+		printf("\n");
+
 	}
 
 
