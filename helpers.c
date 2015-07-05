@@ -22,16 +22,16 @@ double rand_double(){
 //Get max people that can be evacuated from point to shelter
 int get_evac(int point, int shelter,  solution sol, BEPinstance instance){
 	int evac = 0;
-/*    while(1){
+    while(1){
     	evac = randint(instance.bus_capacity);
     	if(evac != 0) break;
 	}
-*/
 
-/*DELETE	if(evac > sol.people_remaining[point]){
+
+	if(evac > sol.people_remaining[point]){
 		evac = sol.people_remaining[point];
 	} 
-*/	
+/*	
     if(sol.people_remaining[point] > instance.bus_capacity){
 		evac = instance.bus_capacity;
 	}
@@ -41,7 +41,7 @@ int get_evac(int point, int shelter,  solution sol, BEPinstance instance){
     if(evac > sol.capacity_remaining[shelter]){
         evac = sol.capacity_remaining[shelter];
     }
-    	
+*/    	
 	return evac;
 }
 
@@ -113,8 +113,6 @@ void initialize_population(BEPinstance instance, solution** population, int pop_
 	int bus = 0;
 	int evac;
 
-	int distance_to_point;
-	int distance_to_shelter;
 
 	initial_tour tmp_tour;
 

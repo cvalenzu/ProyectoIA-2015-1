@@ -8,14 +8,10 @@ solution mutate_solution(solution sol,BEPinstance instance, double mutate_prob){
 	int i,j;
 	int evac;
 	
-	int point,station,shelter;
-	int shelter1;
+	int point;
+	int shelter;
 	
-	int d1,d2;
-
-	int last_shelter_visited;
-
-	tour tmp[20];
+	tour tmp[MAX_TOURS];
 	int tmp_index = 0;
 	int tmp_length = 0;
 
@@ -28,7 +24,6 @@ solution mutate_solution(solution sol,BEPinstance instance, double mutate_prob){
             sol.capacity_remaining[sol.bus_list[i].starting_tour.shelter] += sol.bus_list[i].starting_tour.evac;
 
             //Calculating new point and shelter
-			station = sol.bus_list[i].starting_tour.station;
 			point = randint(instance.points);
 			shelter = randint(instance.shelters);
 
@@ -88,32 +83,54 @@ solution mutate_solution(solution sol,BEPinstance instance, double mutate_prob){
 	}
 
 
-/*	// DELETE: BORRAR TODOS LOS TOUR SIN EVACUADOS
-	for(i = 0; i < instance.buses; i++){
+	// Deleting tours without evacuees
+	for(j= 0; j< MAX_TOURS; j++){
+			tmp[j].evac = 0;
+			tmp[j].point = 0;
+			tmp[j].shelter = 0;
+	}
 
-		for(j = 0; j < sol.bus_list[i].route_length ; j++){
+	for(i = 0; i < instance.buses; i++){
+		if(sol.bus_list[i].starting_tour.evac == 0){
+			sol.bus_list[i].starting_tour.evac =  sol.bus_list[i].route[0].evac;
+			sol.bus_list[i].starting_tour.point =  sol.bus_list[i].route[0].point;
+			sol.bus_list[i].starting_tour.shelter =  sol.bus_list[i].route[0].shelter;
+
+			sol.bus_list[i].route[0].evac    = 0;
+			sol.bus_list[i].route[0].point   = 0;
+			sol.bus_list[i].route[0].shelter = 0;
+		}
+
+		for(j = 0; j < sol.bus_list[i].route_length; j++){
 			if(sol.bus_list[i].route[j].evac != 0){
 				tmp[tmp_index].evac = sol.bus_list[i].route[j].evac;
 				tmp[tmp_index].point = sol.bus_list[i].route[j].point;
 				tmp[tmp_index].shelter = sol.bus_list[i].route[j].shelter;
-				tmp_index += 1;
-				tmp_length +=1;
+				tmp_index  += 1;
+				tmp_length += 1;
+			}
+		}
+		for(j = 0; j < sol.bus_list[i].route_length ;j++){
+			if(j < tmp_length)
+				sol.bus_list[i].route[j] = tmp[j];
+			else{
+				sol.bus_list[i].route[j].evac = 0;
+				sol.bus_list[i].route[j].point = 0;
+				sol.bus_list[i].route[j].shelter = 0;
 			}
 		}
 		sol.bus_list[i].route_length = tmp_length;
-		for(j = 0; j < sol.bus_list[i].route_length ;j++){
-			sol.bus_list[i].route[j] = tmp[j];
-		}
-		tmp_length = 0; 
 
-		for(j= 0; j< 20; j++){
+		for(j= 0; j< MAX_TOURS; j++){
 			tmp[j].evac = 0;
 			tmp[j].point = 0;
 			tmp[j].shelter = 0;
 		}
+		tmp_index = 0;
+		tmp_length = 0; 
 
 	}
-*/
+
 
 	sol.fitness = calculate_fitness(sol,instance);
 	return sol;
