@@ -8,7 +8,8 @@
 #define PEOPLE_VIOLATION 1000
 #define CAPACITY_VIOLATION 500
 
-#define MAX_TOURS 20
+//Max tours for a bus
+#define MAX_TOURS 25
 
 //Bus Evacuation Problem instance structure, with all the data parsed from
 //instance file.

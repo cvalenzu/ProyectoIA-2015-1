@@ -3,6 +3,7 @@
 #include "definitions.h"
 #include "helpers.h"
 
+
 //Takes x,y and return the index in the 
 //linealized matrix
 int get_index(int x,int y,int width){
@@ -32,7 +33,17 @@ int get_evac(int point, int shelter,  solution sol, BEPinstance instance){
 		evac = sol.people_remaining[point];
 	} 
 /*	
-    if(sol.people_remaining[point] > instance.bus_capacity){
+
+*/    	
+	return evac;
+}
+
+
+//Function used to get the maximum people that can be evacuated from a point 
+// to a shelter.
+int get_init_evac(int point, int shelter, solution sol, BEPinstance instance){
+	int evac = 0;
+	if(sol.people_remaining[point] > instance.bus_capacity){
 		evac = instance.bus_capacity;
 	}
     else{
@@ -41,10 +52,8 @@ int get_evac(int point, int shelter,  solution sol, BEPinstance instance){
     if(evac > sol.capacity_remaining[shelter]){
         evac = sol.capacity_remaining[shelter];
     }
-*/    	
-	return evac;
+    return evac;
 }
-
 
 //Calculate evacuation time
 int calculate_evac_time(solution sol, BEPinstance instance){
@@ -110,9 +119,10 @@ void initialize_population(BEPinstance instance, solution** population, int pop_
 	int point;
 	int shelter;
 
-	int bus = 0;
+	int bus;
 	int evac;
 
+	int index;
 
 	initial_tour tmp_tour;
 
@@ -123,6 +133,7 @@ void initialize_population(BEPinstance instance, solution** population, int pop_
 	
 	//Iterating solutions
 	for(i = 0; i < pop_size; i++){	
+		bus = 0;
 		(*population)[i].bus_list = (bus_tour*) malloc(sizeof(bus_tour)*instance.buses);
 		(*population)[i].people_remaining = (int*) malloc(sizeof(int)*instance.points);
 		(*population)[i].capacity_remaining = (int*) malloc(sizeof(int)*instance.shelters);
@@ -139,40 +150,61 @@ void initialize_population(BEPinstance instance, solution** population, int pop_
 		//Iterating stations
 		for(j = 0; j < instance.stations; j++){
 			
-			//Creating initial tour for every bus	
+			//Bus to station assingation	
 			for(k = 0; k < instance.bus_per_station[j]; k++){ 
 				//Start in a station with buses
 				station = j;
-
-				//Random point and shelter
-				point = randint(instance.points);
-				shelter = randint(instance.shelters);
+				evac = 0;
+				while(evac == 0){
+					//Random point and shelter
+					point = randint(instance.points);
+					shelter = randint(instance.shelters);
 				
-				//Creating tmp_tour
-				tmp_tour.station = station;
-				tmp_tour.point = point;
-				tmp_tour.shelter = shelter;
+					//Creating starting_tour
+					(*population)[i].bus_list[bus].starting_tour.station = station;
+					(*population)[i].bus_list[bus].starting_tour.point = point;
+					(*population)[i].bus_list[bus].starting_tour.shelter = shelter;
 				
-				//Calculating evacuation people
-				evac = get_evac(point,shelter, (*population)[i], instance);
-				tmp_tour.evac = evac;
+					//Calculating evacuation people
+					evac = get_init_evac(point,shelter, (*population)[i], instance);
+					(*population)[i].bus_list[bus].starting_tour.evac = evac;
+				}
 
 				//Initializing route length and starting_tour
-				(*population)[i].bus_list[bus].starting_tour = tmp_tour;
 				(*population)[i].bus_list[bus].route_length = 0;
 
 				//Updating lists
 				(*population)[i].people_remaining[point] -= evac;
 				(*population)[i].capacity_remaining[shelter] -= evac;
 				
-				bus += 1;				
-
-				
-				
+				bus += 1;	
 			}
-	
 		}
-		bus = 0;
+		//Evacuating the remaining people
+		for(j = 0; j < instance.points; j++){
+			while((*population)[i].people_remaining[j]  > 0){
+				//Get an available bus
+				index = MAX_TOURS;
+				while(index >= MAX_TOURS){
+					bus = randint(instance.buses);
+					index = (*population)[i].bus_list[bus].route_length;
+				}
+				for(k = 0; k < instance.shelters; k++){
+					evac = 0;
+					evac = get_init_evac(j,k,(*population)[i],instance);
+					if(evac != 0) break;
+				}
+				(*population)[i].bus_list[bus].route[index].point = j;
+				(*population)[i].bus_list[bus].route[index].shelter = k;
+				(*population)[i].bus_list[bus].route[index].evac = evac;
+				(*population)[i].bus_list[bus].route_length += 1;
+				(*population)[i].people_remaining[j] -= evac;
+				(*population)[i].capacity_remaining[k] -= evac;
+			}
+		}
+		
+
+
 		//Calculating solution initial fitness
 		fitness = calculate_fitness((*population)[i],instance);
 		sum_fitness += fitness;

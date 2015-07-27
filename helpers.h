@@ -48,7 +48,8 @@ int calculate_evac_time(solution sol, BEPinstance instance);
 double calculate_fitness(solution sol, BEPinstance instance);
 
 
-//Create an initial population, with a tour from a station to a shelter for every bus.
+//Create an initial population, with a tour from a station to a shelter for every bus and a random route
+//that satisfy capacity and people evacuated constraints
 // ----Parameters-----
 // instance: data of problem instance
 // population: list of possible solutions
