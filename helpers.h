@@ -1,6 +1,13 @@
+/*############################################################
+#															 #
+#		Helpers functions used in Evolutionary Operators	 #
+#															 #
+##############################################################*/
+
 #ifndef HELPERS_HEADER
 #define HELPERS_HEADER
 
+// All the code below is in helpers.c
 
 // Linealize 2D (x,y) index to 1D (k)
 // ----Parameters-----

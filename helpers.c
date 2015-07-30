@@ -23,12 +23,14 @@ double rand_double(){
 //Get max people that can be evacuated from point to shelter
 int get_evac(int point, int shelter,  solution sol, BEPinstance instance){
 	int evac = 0;
+	//Always take full bus, unless the point has fewer people
 	if(sol.people_remaining[point] > instance.bus_capacity){
 		evac = instance.bus_capacity;
 	}
     else{
     	evac = sol.people_remaining[point];
     }
+    //Satisfying shelter capacity constraints
     if(evac > sol.capacity_remaining[shelter]){
         evac = sol.capacity_remaining[shelter];
     }
@@ -231,6 +233,7 @@ void update_evac_time(solution** population, BEPinstance instance, int pop_size)
 	}
 }
 
+//Copy a solution 
 void deep_copy_solution(solution* original, solution* copy, BEPinstance instance){
 	int bus;
 	int i;
@@ -261,20 +264,23 @@ void deep_copy_solution(solution* original, solution* copy, BEPinstance instance
 
 }
 
-
+//Remove tours without evacuees
 void eliminate_void(solution* sol, BEPinstance instance){
 	tour tmp[MAX_TOURS];
 	int i,j;
 	int tmp_index = 0;
 	int tmp_length = 0;
 
+	//Initializing temporary array
 	for(j= 0; j< MAX_TOURS; j++){
 			tmp[j].evac = 0;
 			tmp[j].point = 0;
 			tmp[j].shelter = 0;
 	}
 
+
 	for(i = 0; i < instance.buses; i++){
+		//Looking starting tour evacuees
 		if((*sol).bus_list[i].starting_tour.evac == 0){
 			(*sol).bus_list[i].starting_tour.evac =  (*sol).bus_list[i].route[0].evac;
 			(*sol).bus_list[i].starting_tour.point =  (*sol).bus_list[i].route[0].point;
@@ -284,7 +290,7 @@ void eliminate_void(solution* sol, BEPinstance instance){
 			(*sol).bus_list[i].route[0].point   = 0;
 			(*sol).bus_list[i].route[0].shelter = 0;
 		}
-
+		//Copying tours with evacuees to temporary array
 		for(j = 0; j < MAX_TOURS; j++){
 			if((*sol).bus_list[i].route[j].evac != 0){
 				tmp[tmp_index].evac = (*sol).bus_list[i].route[j].evac;
@@ -294,6 +300,7 @@ void eliminate_void(solution* sol, BEPinstance instance){
 				tmp_length += 1;
 			}
 		}
+		//Copying back tours to solution
 		for(j = 0; j < MAX_TOURS ;j++){
 			if(j < tmp_length)
 				(*sol).bus_list[i].route[j] = tmp[j];
@@ -303,9 +310,10 @@ void eliminate_void(solution* sol, BEPinstance instance){
 				(*sol).bus_list[i].route[j].shelter = 0;
 			}
 		}
+		//Updating route length
 		(*sol).bus_list[i].route_length = tmp_length;
 
-
+		//Cleaning temporary variables for next bus
 		for(j= 0; j< MAX_TOURS; j++){
 				tmp[j].evac = 0;
 				tmp[j].point = 0;

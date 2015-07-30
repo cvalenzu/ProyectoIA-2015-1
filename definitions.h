@@ -1,6 +1,7 @@
 #ifndef DEFINITIONS_HEADER
 #define DEFINITIONS_HEADER
 
+//Seeds for rand() function
 #include "seeds.h"
 
 

@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 
+//Swapping routes of two buses, or changing tour's shelter
 solution mutate_solution(solution sol,BEPinstance instance, double mutate_prob){
 	int i,j;
 	
