@@ -29,17 +29,45 @@ clean:
 	rm *.o
 
 test: testFile
-	./testFile InstanciasBEP/InstanceBEP-1-4-2-4.txt 1 7
+	./testFile InstanciasBEP/InstanceBEP-1-4-2-4.txt 20 2
 
 longtest: testFile
-	./testFile InstanciasBEP/InstanceBEP-1-4-2-4.txt 20 10000
+	./testFile InstanciasBEP/InstanceBEP-1-4-2-4.txt 20 1000
 
 bigtest: testFile
-	./testFile InstanciasBEP/InstanceBEP-8-40-20-20.txt 50 1000
+	./testFile InstanciasBEP/InstanceBEP-8-40-20-20.txt 50 20000
 
 smalltest: testFile
-	./testFile InstanciasBEP/InstanceBEP-1-4-2-4.txt 3 2
+	./testFile InstanciasBEP/InstanceBEP-1-5-3-6.txt 2 100
 
-debug: testFile
-	gdb testFile 
-	run InstanciasBEP/InstanceBEP-1-4-2-4.txt 1 5
+test1: testFile
+	./testFile InstanciasBEP/InstanceBEP-1-4-2-4.txt 10 100
+
+test2: testFile
+	./testFile InstanciasBEP/InstanceBEP-1-5-3-6.txt 10 100
+
+test3: testFile
+	./testFile InstanciasBEP/InstanceBEP-2-12-3-6.txt 10 100
+
+test4: testFile
+	./testFile InstanciasBEP/InstanceBEP-2-22-4-10.txt 10 100
+
+test5: testFile
+	./testFile InstanciasBEP/InstanceBEP-2-32-5-18.txt 10 100
+
+test6: testFile
+	./testFile InstanciasBEP/InstanceBEP-2-9-7-5.txt 10 100
+
+test7: testFile
+	./testFile InstanciasBEP/InstanceBEP-3-11-10-7.txt 10 100
+
+test8: testFile
+	./testFile InstanciasBEP/InstanceBEP-5-25-12-15.txt 10 100
+
+test9: testFile
+	./testFile InstanciasBEP/InstanceBEP-8-40-20-20.txt 10 100
+
+
+
+
+

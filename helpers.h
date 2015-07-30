@@ -2,7 +2,7 @@
 #define HELPERS_HEADER
 
 
-// Linealize 2D index to 1D
+// Linealize 2D (x,y) index to 1D (k)
 // ----Parameters-----
 // x: first dimension index
 // y: second dimension index
@@ -81,4 +81,11 @@ void update_evac_time(solution** population, BEPinstance instance, int pop_size)
 // original: solution to be copied
 // copy: output solution
 void deep_copy_solution(solution* original, solution* copy, BEPinstance instance);
+
+//Eliminate tours with 0 evacuees
+//---Parameters-----
+// sol: current solution
+// instance: data of problem instance
+void eliminate_void(solution* sol, BEPinstance instance);
+
 #endif

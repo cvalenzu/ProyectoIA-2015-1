@@ -23,26 +23,6 @@ double rand_double(){
 //Get max people that can be evacuated from point to shelter
 int get_evac(int point, int shelter,  solution sol, BEPinstance instance){
 	int evac = 0;
-    while(1){
-    	evac = randint(instance.bus_capacity);
-    	if(evac != 0) break;
-	}
-
-
-	if(evac > sol.people_remaining[point]){
-		evac = sol.people_remaining[point];
-	} 
-/*	
-
-*/    	
-	return evac;
-}
-
-
-//Function used to get the maximum people that can be evacuated from a point 
-// to a shelter.
-int get_init_evac(int point, int shelter, solution sol, BEPinstance instance){
-	int evac = 0;
 	if(sol.people_remaining[point] > instance.bus_capacity){
 		evac = instance.bus_capacity;
 	}
@@ -67,17 +47,21 @@ int calculate_evac_time(solution sol, BEPinstance instance){
 	int max_distance = 0;
 	int i,j;
 
+	//Calculating the distance to each bus
 	for(i=0; i < instance.buses; i++){
-		//Calculating the distance to every bus
-
+			
+		//Saving last shelter for tour flow
 		last_shelter =  sol.bus_list[i].starting_tour.shelter;
 		distance += instance.distance_station_matrix[get_index(sol.bus_list[i].starting_tour.point, sol.bus_list[i].starting_tour.station, instance.points)];
 		distance += instance.distance_shelter_matrix[get_index(sol.bus_list[i].starting_tour.shelter, sol.bus_list[i].starting_tour.point, instance.shelters)];
 
 		for(j = 0; j < sol.bus_list[i].route_length ; j++){
+			//Iterating over tours
 			distance += instance.distance_shelter_matrix[get_index(last_shelter, sol.bus_list[i].route[j].point, instance.shelters)];
 			distance += instance.distance_shelter_matrix[get_index(sol.bus_list[i].route[j].shelter, sol.bus_list[i].route[j].point, instance.shelters)];
+			last_shelter = sol.bus_list[i].route[j].shelter;
 		}
+
 		distances[i] = distance;
 		distance = 0;
 	}
@@ -124,8 +108,6 @@ void initialize_population(BEPinstance instance, solution** population, int pop_
 
 	int index;
 
-	initial_tour tmp_tour;
-
 	int i,j,k;
 
 	double sum_fitness = 0;
@@ -147,6 +129,17 @@ void initialize_population(BEPinstance instance, solution** population, int pop_
 			(*population)[i].capacity_remaining[j] = instance.capacity_per_shelter[j];
 		}
 
+		for(j = 0; j < instance.buses; j++){
+			for(k = 0; k <  MAX_TOURS; k++){
+				(*population)[i].bus_list[j].route[k].point = 0;
+				(*population)[i].bus_list[j].route[k].shelter = 0;
+				(*population)[i].bus_list[j].route[k].evac = 0;
+			}
+
+			(*population)[i].bus_list[j].route_length = 0;
+
+		}
+
 		//Iterating stations
 		for(j = 0; j < instance.stations; j++){
 			
@@ -166,12 +159,9 @@ void initialize_population(BEPinstance instance, solution** population, int pop_
 					(*population)[i].bus_list[bus].starting_tour.shelter = shelter;
 				
 					//Calculating evacuation people
-					evac = get_init_evac(point,shelter, (*population)[i], instance);
+					evac = get_evac(point,shelter, (*population)[i], instance);
 					(*population)[i].bus_list[bus].starting_tour.evac = evac;
 				}
-
-				//Initializing route length and starting_tour
-				(*population)[i].bus_list[bus].route_length = 0;
 
 				//Updating lists
 				(*population)[i].people_remaining[point] -= evac;
@@ -191,7 +181,7 @@ void initialize_population(BEPinstance instance, solution** population, int pop_
 				}
 				for(k = 0; k < instance.shelters; k++){
 					evac = 0;
-					evac = get_init_evac(j,k,(*population)[i],instance);
+					evac = get_evac(j,k,(*population)[i],instance);
 					if(evac != 0) break;
 				}
 				(*population)[i].bus_list[bus].route[index].point = j;
@@ -269,4 +259,59 @@ void deep_copy_solution(solution* original, solution* copy, BEPinstance instance
 	}
 
 
+}
+
+
+void eliminate_void(solution* sol, BEPinstance instance){
+	tour tmp[MAX_TOURS];
+	int i,j;
+	int tmp_index = 0;
+	int tmp_length = 0;
+
+	for(j= 0; j< MAX_TOURS; j++){
+			tmp[j].evac = 0;
+			tmp[j].point = 0;
+			tmp[j].shelter = 0;
+	}
+
+	for(i = 0; i < instance.buses; i++){
+		if((*sol).bus_list[i].starting_tour.evac == 0){
+			(*sol).bus_list[i].starting_tour.evac =  (*sol).bus_list[i].route[0].evac;
+			(*sol).bus_list[i].starting_tour.point =  (*sol).bus_list[i].route[0].point;
+			(*sol).bus_list[i].starting_tour.shelter =  (*sol).bus_list[i].route[0].shelter;
+
+			(*sol).bus_list[i].route[0].evac    = 0;
+			(*sol).bus_list[i].route[0].point   = 0;
+			(*sol).bus_list[i].route[0].shelter = 0;
+		}
+
+		for(j = 0; j < MAX_TOURS; j++){
+			if((*sol).bus_list[i].route[j].evac != 0){
+				tmp[tmp_index].evac = (*sol).bus_list[i].route[j].evac;
+				tmp[tmp_index].point = (*sol).bus_list[i].route[j].point;
+				tmp[tmp_index].shelter = (*sol).bus_list[i].route[j].shelter;
+				tmp_index  += 1;
+				tmp_length += 1;
+			}
+		}
+		for(j = 0; j < MAX_TOURS ;j++){
+			if(j < tmp_length)
+				(*sol).bus_list[i].route[j] = tmp[j];
+			else{
+				(*sol).bus_list[i].route[j].evac = 0;
+				(*sol).bus_list[i].route[j].point = 0;
+				(*sol).bus_list[i].route[j].shelter = 0;
+			}
+		}
+		(*sol).bus_list[i].route_length = tmp_length;
+
+
+		for(j= 0; j< MAX_TOURS; j++){
+				tmp[j].evac = 0;
+				tmp[j].point = 0;
+				tmp[j].shelter = 0;
+		}
+		tmp_index = 0;
+		tmp_length = 0;
+	}
 }
