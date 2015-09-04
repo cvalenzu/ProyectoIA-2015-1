@@ -32,7 +32,7 @@ test: testFile
 	./testFile InstanciasBEP/InstanceBEP-1-4-2-4.txt 20 2
 
 longtest: testFile
-	./testFile InstanciasBEP/InstanceBEP-1-4-2-4.txt 20 10000
+	./testFile InstanciasBEP/InstanceBEP-1-4-2-4.txt 20 10000000
 
 bigtest: testFile
 	./testFile InstanciasBEP/InstanceBEP-8-40-20-20.txt 50 20000
@@ -65,7 +65,7 @@ test8: testFile
 	./testFile InstanciasBEP/InstanceBEP-5-25-12-15.txt 10 100
 
 test9: testFile
-	./testFile InstanciasBEP/InstanceBEP-8-40-20-20.txt 10 100
+	./testFile InstanciasBEP/InstanceBEP-8-40-20-20.txt 10 1000000
 
 
 

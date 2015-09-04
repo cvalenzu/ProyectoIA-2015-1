@@ -39,6 +39,7 @@ int main(int argc, char* argv[]){
 
 	srand(INIT_SEED);
 	initialize_population(instance,&population,pop_size);
+	initialize_population(instance,&new_population,pop_size);
 
 
 	srand(GENETIC_SEED);
@@ -73,6 +74,17 @@ int main(int argc, char* argv[]){
 					deep_copy_solution(&(tmp_solution[1]), &(new_population[new_pop_size]), instance);
 					new_pop_size +=1;
 				}
+
+				free(tmp_solution[0].bus_list);
+				free(tmp_solution[0].people_remaining);
+				free(tmp_solution[0].capacity_remaining);
+
+				free(tmp_solution[1].bus_list);
+				free(tmp_solution[1].people_remaining);
+				free(tmp_solution[1].capacity_remaining);
+
+				free(tmp_solution);
+
 			}
 			else{
 				//Mutating a single solution

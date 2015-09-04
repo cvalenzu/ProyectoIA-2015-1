@@ -242,10 +242,6 @@ void deep_copy_solution(solution* original, solution* copy, BEPinstance instance
 	(*copy).relative_fitness = (*original).relative_fitness;
 	(*copy).evac_time = (*original).evac_time;
 
-	(*copy).bus_list = (bus_tour*) malloc(sizeof(bus_tour)*instance.buses);
-	(*copy).people_remaining = (int*) malloc(sizeof(int)*instance.points);
-	(*copy).capacity_remaining = (int*) malloc(sizeof(int)*instance.shelters);
-
 	for(i = 0; i < instance.points; i++){
 		(*copy).people_remaining[i] = (*original).people_remaining[i];
 	}

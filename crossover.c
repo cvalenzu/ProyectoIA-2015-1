@@ -28,6 +28,14 @@ solution* one_point_crossover(solution sol1, solution sol2, BEPinstance instance
 	sols = (solution*) malloc(sizeof(solution)*2);
 	cuts = (int*) malloc(sizeof(int)*instance.buses);
 
+	sols[0].bus_list = (bus_tour*) malloc(sizeof(bus_tour)*instance.buses);
+	sols[0].people_remaining = (int*) malloc(sizeof(int)*instance.points);
+	sols[0].capacity_remaining = (int*) malloc(sizeof(int)*instance.shelters);
+
+	sols[1].bus_list = (bus_tour*) malloc(sizeof(bus_tour)*instance.buses);
+	sols[1].people_remaining = (int*) malloc(sizeof(int)*instance.points);
+	sols[1].capacity_remaining = (int*) malloc(sizeof(int)*instance.shelters);
+
 	//Making a copy of parent solutions
 	deep_copy_solution(&(sol1), &(sols[0]),instance);
 	deep_copy_solution(&(sol2), &(sols[1]),instance);
