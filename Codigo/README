@@ -9,7 +9,7 @@ Se cuenta con un archivo Makefile, para la compilación y para correr los distin
 
 En la carpeta Logs se encuentran todos los experimentos realizados, dentro de ella existe un archivo README, que explica el contenido de cada carpeta.
 
- ## Manual de uso
+## Manual de uso
  Para ejecutar el algoritmo:
  - Primero se tiene que compilar utilizando el comando "make"
  - Luego de compilarlo existen dos formas de ejecutarlo
