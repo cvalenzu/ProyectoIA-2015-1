@@ -26,39 +26,33 @@ selection.o: selection.c definitions.h operators.h
 
 clean:
 	rm *.o
-
-test: BEP
-	time ./BEP InstanciasBEP/InstanceBEP-1-4-2-4.txt 100 100000
-	
-smalltest: BEP
-	time ./BEP InstanciasBEP/InstanceBEP-1-5-3-6.txt 100 100000
  
 test1: BEP
-	time ./BEP InstanciasBEP/InstanceBEP-1-4-2-4.txt 100 100000
+	time ./BEP InstanciasBEP/InstanceBEP-1-4-2-4.txt 100 10000
 
 test2: BEP
-	time ./BEP InstanciasBEP/InstanceBEP-1-5-3-6.txt 100 100000
+	time ./BEP InstanciasBEP/InstanceBEP-1-5-3-6.txt 100 10000
 
 test3: BEP
-	time ./BEP InstanciasBEP/InstanceBEP-2-12-3-6.txt 100 100000
+	time ./BEP InstanciasBEP/InstanceBEP-2-12-3-6.txt 100 10000
 
 test4: BEP
-	time ./BEP InstanciasBEP/InstanceBEP-2-22-4-10.txt 100 100000
+	time ./BEP InstanciasBEP/InstanceBEP-2-22-4-10.txt 100 10000
 
 test5: BEP
 	time ./BEP InstanciasBEP/InstanceBEP-2-32-5-18.txt 100 10000
 
 test6: BEP
-	time ./BEP InstanciasBEP/InstanceBEP-2-9-7-5.txt 100 100000
+	time ./BEP InstanciasBEP/InstanceBEP-2-9-7-5.txt 100 10000
 
 test7: BEP
-	time ./BEP InstanciasBEP/InstanceBEP-3-11-10-7.txt 100 100000
+	time ./BEP InstanciasBEP/InstanceBEP-3-11-10-7.txt 100 10000
 
 test8: BEP
-	time ./BEP InstanciasBEP/InstanceBEP-5-25-12-15.txt 100 100000
+	time ./BEP InstanciasBEP/InstanceBEP-5-25-12-15.txt 100 10000
 
 test9: BEP
-	time ./BEP InstanciasBEP/InstanceBEP-8-40-20-20.txt 100 100000
+	time ./BEP InstanciasBEP/InstanceBEP-8-40-20-20.txt 100 10000
 
 
 

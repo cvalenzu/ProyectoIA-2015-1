@@ -1,0 +1,19 @@
+# Proyecto Inteligencia Artificial 2015-1
+Bus Evacuation Problem - Evolutionary Algorithm
+Camilo Valenzuela - 2011730303-5
+
+## Archivos
+Todos los archivos necesarios se encuentran en la carpeta raiz, los archivos .h contienen todas las definiciones y detalle de entrada y salida de las funciones, y los archivos .c tienen el código fuente de las funciones.
+
+Se cuenta con un archivo Makefile, para la compilación y para correr los distintos tests, que van desde test1 hasta test9, donde se llaman las distintas instancias del problema, con una población de 100 individuos y 10000 generaciones.
+
+En la carpeta Logs se encuentran todos los experimentos realizados, dentro de ella existe un archivo README, que explica el contenido de cada carpeta.
+
+ ## Manual de uso
+ Para ejecutar el algoritmo:
+ - Primero se tiene que compilar utilizando el comando "make"
+ - Luego de compilarlo existen dos formas de ejecutarlo
+ 	1- con el comando "make test1"
+ 	2- o ejecutando el binario "./BEP InstanciasBEP/<instancia> <tam_poblacion> <cant_generaciones>"
+   Para guardar los resultados se utilizó "make test1 > Logs/<carpeta>/<nombre_archivo>.log"
+ - Si se desea volver a compilar se puede utilizar el comando "make clean" para limpiar los binarios y luego volver a compilar con "make"
