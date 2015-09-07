@@ -17,8 +17,9 @@ int main(int argc, char* argv[]){
 	int i, index, index2;
 
 	double mutation_prob = 0.5;
-	double cross_prob = 0.3;
+	double cross_prob = 0.5;
 	double MAX_CROSS_PROB = 0.7;
+	double increment = 0.03;
 		
 	int j,bus, solut;
 
@@ -96,7 +97,7 @@ int main(int argc, char* argv[]){
 		}
 
 		//Increasing crossover operation over time
-		if(cross_prob < MAX_CROSS_PROB) cross_prob += 0.05;
+		if(cross_prob < MAX_CROSS_PROB) cross_prob += increment;
 
 		tmp_solution = population;
 		population = new_population;
@@ -108,16 +109,15 @@ int main(int argc, char* argv[]){
 		new_pop_size = 0;
 
 
-		//////// DELETE	
-		for(j = 0; j < pop_size; j++){
-				printf("Solucion: %d, Fitness: %f, Evac time:%d\n",j+1,population[j].fitness,population[j].evac_time);
-		}
+	for(j = 0; j < pop_size; j++){
+			printf("Solucion: %d, Fitness: %f, Evac time:%d\n",j+1,population[j].fitness,population[j].evac_time);
+	}
 
 	}
-	/////DELETE
-	for(solut = 0; solut <pop_size; solut++){
 
-		printf("Solucion: %d\n", solut);
+	printf("Mejor Solucion:")
+	for(solut = 0; solut < 2; solut++){
+
 		printf("People Remaining:\n");
 		for(j = 0; j < instance.points; j++){
 			printf("%d ", population[solut].people_remaining[j]);

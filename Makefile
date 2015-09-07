@@ -1,10 +1,9 @@
-
 CC = gcc
 CFLAGS=-c -Wall -g
 
 
 all: main.o
-	$(CC) main.o helpers.o parser.o mutate.o selection.o crossover.o -o testFile
+	$(CC) main.o helpers.o parser.o mutate.o selection.o crossover.o -o BEP
 
 #Add crossover.o
 main.o: parser.o helpers.o mutate.o selection.o crossover.o
@@ -28,44 +27,38 @@ selection.o: selection.c definitions.h operators.h
 clean:
 	rm *.o
 
-test: testFile
-	./testFile InstanciasBEP/InstanceBEP-1-4-2-4.txt 20 2
+test: BEP
+	time ./BEP InstanciasBEP/InstanceBEP-1-4-2-4.txt 100 100000
+	
+smalltest: BEP
+	time ./BEP InstanciasBEP/InstanceBEP-1-5-3-6.txt 100 100000
+ 
+test1: BEP
+	time ./BEP InstanciasBEP/InstanceBEP-1-4-2-4.txt 100 100000
 
-longtest: testFile
-	./testFile InstanciasBEP/InstanceBEP-1-4-2-4.txt 20 10000000
+test2: BEP
+	time ./BEP InstanciasBEP/InstanceBEP-1-5-3-6.txt 100 100000
 
-bigtest: testFile
-	./testFile InstanciasBEP/InstanceBEP-8-40-20-20.txt 50 20000
+test3: BEP
+	time ./BEP InstanciasBEP/InstanceBEP-2-12-3-6.txt 100 100000
 
-smalltest: testFile
-	./testFile InstanciasBEP/InstanceBEP-1-5-3-6.txt 2 100
+test4: BEP
+	time ./BEP InstanciasBEP/InstanceBEP-2-22-4-10.txt 100 100000
 
-test1: testFile
-	./testFile InstanciasBEP/InstanceBEP-1-4-2-4.txt 10 100
+test5: BEP
+	time ./BEP InstanciasBEP/InstanceBEP-2-32-5-18.txt 100 10000
 
-test2: testFile
-	./testFile InstanciasBEP/InstanceBEP-1-5-3-6.txt 10 100
+test6: BEP
+	time ./BEP InstanciasBEP/InstanceBEP-2-9-7-5.txt 100 100000
 
-test3: testFile
-	./testFile InstanciasBEP/InstanceBEP-2-12-3-6.txt 10 100
+test7: BEP
+	time ./BEP InstanciasBEP/InstanceBEP-3-11-10-7.txt 100 100000
 
-test4: testFile
-	./testFile InstanciasBEP/InstanceBEP-2-22-4-10.txt 10 100
+test8: BEP
+	time ./BEP InstanciasBEP/InstanceBEP-5-25-12-15.txt 100 100000
 
-test5: testFile
-	./testFile InstanciasBEP/InstanceBEP-2-32-5-18.txt 10 100
-
-test6: testFile
-	./testFile InstanciasBEP/InstanceBEP-2-9-7-5.txt 10 100
-
-test7: testFile
-	./testFile InstanciasBEP/InstanceBEP-3-11-10-7.txt 10 100
-
-test8: testFile
-	./testFile InstanciasBEP/InstanceBEP-5-25-12-15.txt 10 100
-
-test9: testFile
-	./testFile InstanciasBEP/InstanceBEP-8-40-20-20.txt 10 1000000
+test9: BEP
+	time ./BEP InstanciasBEP/InstanceBEP-8-40-20-20.txt 100 100000
 
 
 

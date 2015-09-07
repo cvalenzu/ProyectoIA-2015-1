@@ -1,0 +1,21 @@
+En esta carpeta se encuentran los logs resultantes de los distintos experimentos
+OnlyMutate: Carpeta con todas las pruebas utilizando sólo mutación
+OnlyCross: Carpeta con pruebas utilizando sólo recombinación
+CrossProb: Carpeta con pruebas variando la probabilidad de recombinacion (Decide si se usa Recombinacion o Mutación)
+DynamicCross: Carpeta con pruebas ver si es bueno mutar y luego recombinar.
+Population: Carpeta utilizando distintos tamaños de población.
+Generations: Carpeta con pruebas variando la cantidad de generaciones (iteraciones) del algoritmo.
+
+Todos los archivos comienzan con el prefijo TX, que indica la instancia del problema.
+
+Prefijo 
+Archivo:	  Instacia
+ 	T1: 	  1-4-2-4
+ 	T2:  	  1-5-3-6
+	T3:  	  2-12-3-6
+ 	T4:  	  2-22-4-10
+ 	T5:   	  2-32-5-18
+ 	T6:  	  2-9-7-5
+ 	T7:   	  3-11-10-7
+ 	T8:   	  5-25-12-15
+ 	T9:   	  8-40-20-20
